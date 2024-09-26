@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = 'v.01'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.1.Final'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+
+
+}
+
