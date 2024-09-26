@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.*;
+import org.example.Ornek02.Views.VwPersonel;
 import org.example.Ornek02.entity.Adres;
 import org.example.Ornek02.entity.Departman;
 import org.example.Ornek02.entity.Personel;
@@ -88,22 +89,60 @@ public class Sorgular {
         return HibernateConnection.em.createQuery(cq).getResultList();
     }
 
+    //6- ünvanlarına göre personel sayıları
+    public List<Object[]> findNumberOfPersonelByUnvans(){
+        CriteriaBuilder cb = HibernateConnection.em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        Root<Personel> root = cq.from(Personel.class);
 
+        cq.multiselect(root.get("eUnvan"),cb.count(root));
+        cq.groupBy(root.get("eUnvan"));
+        return HibernateConnection.em.createQuery(cq).getResultList();
+    }
+    //7- personel Listesi;
+    /**
+     *  *          * 7- personel Listesi;
+     *  *          * id: 44
+     *  *          * ad: Muhammet
+     *  *          * ünvan: Eğitmen
+     *  *          * departmanı: Yazılım
+     *  *          * müdür: Ayhan
+     *  *          * -------------
+     *  *          * şeklinde bir çıktı verin.
+     *  *          *
+     *  *          * ÖRN:
+     *  *          * public List<VwPersonel> findAllViewPersonel(){
+     *  *          *     return null;
+     *  *          * }
+     *  *          *
+     *  *          */
+
+    public List<VwPersonel> findAllViewPersonel(){
+        List<VwPersonel> vwPersonelList = new ArrayList<>();
+        CriteriaBuilder cb = HibernateConnection.em.getCriteriaBuilder();
+        CriteriaQuery<Personel> cq = cb.createQuery(Personel.class);
+        Root<Personel> root = cq.from(Personel.class);
+        cq.select(root);
+        List<Personel> resultList = HibernateConnection.em.createQuery(cq).getResultList();
+        List<Personel> mudurList = resultList.stream().filter(p -> p.getEUnvan().equals(EUnvan.MUDUR)).toList();
+        for(Personel personel : resultList){
+            VwPersonel vwPersonel = new VwPersonel();
+            vwPersonel.setId(personel.getId());
+            vwPersonel.setDepartmantName(personel.getDepartman().getAd());
+            vwPersonel.setUnvan(personel.getEUnvan());
+            vwPersonel.setFullName(personel.getAd()+" "+personel.getSoyad());
+            for(Personel mudur : mudurList){
+                if(mudur.getId().equals(personel.getDepartman().getYetkiliId())){
+                    vwPersonel.setManagerName(mudur.getAd()+" "+mudur.getSoyad());
+                    break;
+                }
+            }
+            if(vwPersonel.getFullName().equalsIgnoreCase(vwPersonel.getManagerName())){
+                vwPersonel.setManagerName("N/A");
+            }
+            vwPersonelList.add(vwPersonel);
+        }
+        return vwPersonelList;
+    }
 }
-/**
- *          * 6- ünvanlarına göre personel sayıları
- *          * 7- personel Listesi;
- *          * id: 44
- *          * ad: Muhammet
- *          * ünvan: Eğitmen
- *          * departmanı: Yazılım
- *          * müdür: Ayhan
- *          * -------------
- *          * şeklinde bir çıktı verin.
- *          *
- *          * ÖRN:
- *          * public List<VwPersonel> findAllViewPersonel(){
- *          *     return null;
- *          * }
- *          *
- *          */
+

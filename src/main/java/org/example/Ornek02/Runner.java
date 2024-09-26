@@ -25,13 +25,15 @@ public class Runner {
 //        sorgular.findPersonelsByCityName("ankara").forEach(System.out::println);
 //        sorgular.findPersonelsByManagersId("Mehmet").forEach(System.out::println);
 //        sorgular.findPersonelsByUnvan(EUnvan.MUDUR).forEach(System.out::println);
-        sorgular.findNumberOfPersonelInDepartment().forEach(p->{
-            Departman departman = (Departman) p[0];
-            Long count = (Long) p[1];
-            System.out.println(departman.getAd()+" = "+count);
-        });
-
-
+//        sorgular.findNumberOfPersonelInDepartment().forEach(p->{
+//            Departman departman = (Departman) p[0];
+//            Long count = (Long) p[1];
+//            System.out.println(departman.getAd()+" = "+count);
+//        });
+//            sorgular.findNumberOfPersonelByUnvans().forEach(p->{
+//                System.out.println(p[0]+" - "+p[1]+" kişi");
+//            });
+            sorgular.findAllViewPersonel().forEach(System.out::println);
 
 
 
